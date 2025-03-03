@@ -1,3 +1,42 @@
+Here is the stuff that should fail, 
+650184 is a fully supported Gigabyte motherboard 
+    it's here to test if the code can detect missing from rawData.
+LGA 1700 gives me a headache with DDR4/5 and other naming convention problems.
+    It's to be expected on the bad list
+Asrock hasn't been in a bundle since I can remember. 
+    Didn't feel like figuring out their pattern.
+
+Table of good stuff
+    Includes at least one of each supported brand. Links shouldn't 404 unless fmb is gone.
+
+    below the expected output we have the test patterns.
+Expected output
+
+Missing SKUs (from extracted list):
+
+650184
+
+514406 MSI Z790-P Pro WiFi D4 LGA 1700 - Unsupported Brand or Socket
+
+689570 ASUS Z790-V Prime AX LGA 1700 - Unsupported Brand or Socket
+
+720136 ASUS Z790 Prime Gaming WIFI7 LGA 1700 - Unsupported Brand or Socket
+
+536334 ASUS Z790-Plus TUF Gaming WiFi D5 LGA 1700 - Unsupported Brand or Socket
+
+755900 ASRock X870 Pro RS WiFi AM5 - Unsupported Brand or Socket
+
+
+SKU 	Name 	Link
+660753	Gigabyte B650 Gaming X AX V2 AM5	https://flashmyboard.com/mb/Gigabyte_B650_GAMING_X_AX_V2
+802967	MSI X870E MAG TOMAHAWK WIFI AM5	https://flashmyboard.com/mb/MSI_MAG_X870E_TOMAHAWK_WIFI
+574863	MSI X670E MAG Tomahawk WiFi AM5	https://flashmyboard.com/mb/MSI_MAG_X670E_TOMAHAWK_WIFI
+742627	ASUS X870E-E ROG Strix Gaming WiFi AM5	https://flashmyboard.com/mb/Asus_ROG_STRIX_X870E-E_GAMING_WIFI
+513747	ASUS B650-A ROG Strix Gaming WiFi AM5	https://flashmyboard.com/mb/Asus_ROG_STRIX_B650-A_GAMING_WIFI
+693788	ASUS B650-E TUF Gaming WiFi AM5	https://flashmyboard.com/mb/Asus_TUF_GAMING_B650-E_WIFI
+440198	ASUS B650M-PLUS TUF Gaming WiFi AM5	https://flashmyboard.com/mb/Asus_TUF_GAMING_B650M-PLUS_WIFI
+663286	ASUS B650M-A Prime AX II AM5	https://flashmyboard.com/mb/Asus_PRIME_B650M-A_AX_II
+
 skuList
 Bundle, Build & Save with Intel
 326694 $269.99 / 689570 $199.99 / 548628 $82.99
@@ -248,7 +287,24 @@ QUICK VIEW
 ADD TO CART
 In Store Only
  
+ASUS B650M-PLUS TUF Gaming WiFi AMD AM5 microATX Motherboard
+Select 2 to compare
+SKU: 440198
 
+ASUS B650M-PLUS TUF Gaming WiFi AMD AM5 microATX Motherboard
+4.1
+14 IN STOCK
+Our price$189.99
+2 open box from $151.96
+ 
+ASRock X870 Pro RS WiFi AMD AM5 ATX Motherboard
+Select 2 to compare
+SKU: 755900
+
+ASRock X870 Pro RS WiFi AMD AM5 ATX Motherboard
+4.4
+20 IN STOCK
+Our price$209.99
  
 ASUS B650M-A Prime AX II AMD AM5 microATX Motherboard
 Select 2 to compare
