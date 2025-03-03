@@ -37,7 +37,7 @@
 
     <p>
         <b>Manual:</b> You will want a Chromium-based browser to open the following links. (Firefox renders invisible text and allows you to copy it, breaking the detection scheme.)<br><br>
-        For the first text box, you need bundle data. For AMD, visit: <a href="https://www.microcenter.com/site/content/bundle-and-save.aspx" target="_blank">AMD Bundle Page</a>. For Intel, visit: <a href="https://www.microcenter.com/site/content/intel-bundle-and-save.aspx" target="_blank">Intel Bundle Page</a>.<br><br>
+        For the first text box, you need bundle data. For AMD, visit: <a href="https://www.microcenter.com/site/content/bundle-and-save.aspx" target="_blank">AMD Bundle Page</a>. Intel is not on the roadmap. The current set of bundles have very broken names.<br><br>
         Once the page is loaded, use Ctrl+A to select all the text on the page, copy it, and paste it into the first text box.<br><br>
         For the second box, go to this page: <a href="https://www.microcenter.com/search/search_results.aspx?N=4294966996&rpp=96" target="_blank">Motherboard Search Page</a> and do the same (Ctrl+A, copy, paste).
     </p>
@@ -60,7 +60,7 @@
 
     <script>
         const sockets = ["AM5", "LGA1700"]; // Global array of sockets
-        const brands = ["Gigabyte", "MSI", "ASUS"]; // Global array of supported brands
+        const brands = ["Gigabyte", "MSI", "ASUS"]; // Global array of brands
 
         function getMiddleSKU(data) {
             const lines = data.split('\n');
@@ -104,12 +104,9 @@
 
             let intendedSKUs = [];
             const containsLetters = /[a-zA-Z]/.test(skuListText);
-            const isCleanSKUList = (!(containsLetters || skuListText.includes('SKU:')) && skuListText.trim() !== '');
-
-            if (isCleanSKUList) {
-                intendedSKUs = skuListText.split('\n').map(sku => sku.trim()).filter(sku => sku !== ''); // Treat as clean SKU list
-            }
-            intendedSKUs = [...new Set(intendedSKUs)]; // Unique intended SKUs
+            const isCleanSKUList = !(
+                containsLetters || skuListText.includes('SKU:')
+            ) && skuListText.trim() !== '';
 
             let skusToMatch_middleSku = getMiddleSKU(skuListText);
             let skusToMatch_skuData = extractSKUsFromData(skuListText);
@@ -124,55 +121,51 @@
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (line.startsWith('SKU:')) {
-                    const sku = line.split('SKU:')[1].trim();
+                    let sku = line.split('SKU:')[1].trim();
+                    sku = sku.replace(/\s/g, ''); // Remove all whitespace
 
-                    if (isCleanSKUList ? intendedSKUs.includes(sku) : skusToMatch.includes(sku)) {
-                        console.log(` SKU ${sku} is in ${isCleanSKUList ? 'intendedSKUs' : 'skusToMatch'} (correct list now!)`);
-                        if (i - 2 >= 0 && lines[i - 2].trim().endsWith('Motherboard')) {
-                            const fullMotherboardName = lines[i - 2].trim();
+                    const skuIsPresent = skusToMatch.includes(sku);
+
+                    if (skuIsPresent) {
+                        console.log(
+                            ` SKU ${sku} is in skusToMatch (correct list now!)`
+                        );
+
+                        // Attempt to get the motherboard name two lines *after* the SKU line
+                        if (lines[i + 2]) {
+                            let fullMotherboardName = lines[i + 2].trim();
                             let trimmedName = fullMotherboardName;
-
                             removeStrings.forEach(str => {
                                 trimmedName = trimmedName.replace(str, '').trim();
                             });
-
                             trimmedName = trimmedName.replace(/\s+/g, ' ');
 
                             trimmedResults.push(`SKU: ${sku} ${trimmedName}`);
                             foundSKUs.add(sku);
-                        } else {}
-                    } else {}
+
+                        } else {
+                            console.warn(
+                                `Could not find motherboard name for SKU: ${sku}. Expected line two lines after "SKU:".`
+                            );
+                            trimmedResults.push(`SKU: ${sku} Unknown Motherboard`); // Add a placeholder
+                        }
+                    } else {
+                        console.log(`SKU ${sku} not found in lists`);
+                    }
                 }
             }
 
             let missingSKUs = []; // Initialize missingSKUs
+            missingSKUs = skusToMatch.filter(sku => !foundSKUs.has(sku)); // Use skusToMatch for noisy data
 
-            if (isCleanSKUList) {
-                missingSKUs = intendedSKUs.filter(sku => !foundSKUs.has(sku)); // Use intendedSKUs for clean list
+            if (missingSKUs.length > 0) {
+                missingSKUsElement.innerHTML =
+                    '<p class="warning">Missing SKUs (from extracted list):</p><pre>' +
+                    missingSKUs.join('\n') +
+                    '</pre>';
             } else {
-                missingSKUs = skusToMatch.filter(sku => !foundSKUs.has(sku)); // Use skusToMatch for noisy data
+                missingSKUsElement.innerHTML = '<p>All Extracted SKUs found.</p>';
             }
-
-
-            if (isCleanSKUList && intendedSKUs.length > 0) { // Condition for clean SKU list
-                if (missingSKUs.length > 0) {
-                    missingSKUsElement.innerHTML = '<p>Missing SKUs:</p><pre>' + missingSKUs.join('\n') + '</pre>';
-                } else {
-                    missingSKUsElement.innerHTML = '<p>All SKUs found.</p>';
-                }
-            } else if (!isCleanSKUList && skusToMatch.length > 0) { // Condition for noisy data (SKUs extracted)
-                if (missingSKUs.length > 0) {
-                    missingSKUsElement.innerHTML = '<p class="warning">Missing SKUs (from extracted list):</p><pre>' + missingSKUs.join('\n') + '</pre>';
-                } else {
-                    missingSKUsElement.innerHTML = '<p>All Extracted SKUs found.</p>';
-                }
-
-            }
-
-            else { // No SKUs provided or extracted in skuList
-                missingSKUsElement.innerHTML = '<p>No SKUs provided or extracted from SKU List to search for.</p>'; // More informative message
-            }
-
 
             // Prepare data for FlashMyBoard Link Generator
             const flashMyBoardData = trimmedResults.map(item => {
@@ -205,9 +198,10 @@
                     let sku = motherboards[0].trim();
                     name = motherboards[1].trim();
                     isSupported = brands.some(brand => name.startsWith(brand)); // Check if name starts with any of the supported brands
+                    isSupported = isSupported && !name.endsWith("1700"); // Check if name ends in 1700 too many edge cases with DDR4 vs DDR5
 
                     if (!isSupported) {
-                        document.getElementById("unsupportedBrands").innerHTML += `<p>${line} - Unsupported Brand</p>`;
+                        document.getElementById("unsupportedBrands").innerHTML += `<p>${line} - Unsupported Brand or Socket</p>`;
                         continue; // Skip to the next line
                     }
 
