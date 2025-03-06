@@ -116,7 +116,7 @@
             const lines = rawData.split('\n');
             const trimmedResults = [];
             const foundSKUs = new Set();
-            const removeStrings = ['Motherboard', 'microATX', 'ATX', 'AMD', 'Intel'];
+            const removeStrings = ['Motherboard', 'microATX', 'ATX', 'Mini-ITX', 'AMD', 'Intel'];
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
