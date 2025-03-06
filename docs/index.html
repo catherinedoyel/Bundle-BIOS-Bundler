@@ -252,7 +252,7 @@
             } else if (name.startsWith("MSI")) {
                 brand = "MSI";
                 linkName = name.toUpperCase().replace(/ /g, "_"); //Uppercase and replace space before calling shared function
-                const adjectives = ["MAG", "MPG"];
+                const adjectives = ["MAG", "MPG", "PRO"];
                 linkName = extractAndReorderChipset(linkName, brand, adjectives);
 
             } else if (name.startsWith("ASUS")) {
