@@ -116,7 +116,7 @@
             const lines = rawData.split('\n');
             const trimmedResults = [];
             const foundSKUs = new Set();
-            const removeStrings = ['Motherboard', 'microATX', 'ATX', 'Mini-ITX', 'AMD', 'Intel'];
+            const removeStrings = ['Motherboard', 'eATX', 'microATX', 'ATX', 'Mini-ITX', 'AMD', 'Intel'];
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -259,7 +259,7 @@
                 brand = "ASUS";
                 linkName = name.toUpperCase(); // Capitalize everything
                 linkName = linkName.replace(/ /g, "_");
-                const adjectives = ["ROG_STRIX", "TUF_GAMING", "PRIME"];
+                const adjectives = ["ROG_STRIX", "ROG_MAXIMUS", "TUF_GAMING", "PRIME"];
                 linkName = extractAndReorderChipset(linkName, brand, adjectives);
                 linkName = linkName.replace(/^ASUS(.*)/i, (match, group1) => 'Asus' + group1);
 
