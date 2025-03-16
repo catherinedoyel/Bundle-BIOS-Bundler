@@ -59,7 +59,7 @@
     </table>
 
     <script>
-        const sockets = ["AM5", "LGA1700", "AM4", "LGA 1851"]; // Global array of sockets
+        const sockets = ["AM5", "LGA1700", "AM4", "LGA 1851", "LGA1851", "LGA_1851", "sTR5"]; // Global array of sockets
         const brands = ["Gigabyte", "MSI", "ASUS"]; // Global array of brands
 
         function getMiddleSKU(data) {
@@ -116,7 +116,7 @@
             const lines = rawData.split('\n');
             const trimmedResults = [];
             const foundSKUs = new Set();
-            const removeStrings = ['Motherboard', 'eATX', 'microATX', 'ATX', 'Mini-ITX', 'AMD', 'Intel'];
+            const removeStrings = ['Motherboard', 'EEB', 'eATX', 'microATX', 'ATX', 'Mini-ITX', 'AMD', 'Intel'];
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -197,9 +197,10 @@
                 if (motherboards.length === 2) {
                     let sku = motherboards[0].trim();
                     name = motherboards[1].trim();
-                    isSupported = brands.some(brand => name.startsWith(brand)); // Check if name starts with any of the supported brands
-                    isSupported = isSupported && !name.endsWith("1700"); // Check if name ends in 1700 too many edge cases with DDR4 vs DDR5
-                    //need to add case for removing trx50
+                    isSupported = brands.some(brand => name.startsWith(brand)); // Check if name starts with any of the supported brands.
+                    isSupported = isSupported && !name.endsWith("1700"); // Check if name ends in 1700 too many edge cases with DDR4 vs DDR5.
+					isSupported = isSupported && !name.endsWith("sTR5"); // Check if name ends in sTR5, FMB only supports mainstream sockets.
+
                     if (!isSupported) {
                         document.getElementById("unsupportedBrands").innerHTML += `<p>${line} - Unsupported Brand or Socket</p>`;
                         continue; // Skip to the next line
