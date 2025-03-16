@@ -242,40 +242,49 @@
         }
 
         function generateLink(name) {
-            let linkName = name;
-            let brand = ""; // Determine the brand
+		let linkName = name;
+		let brand = ""; // Determine the brand
 
-            if (name.startsWith("Gigabyte")) {
-                brand = "Gigabyte";
-                linkName = linkName.replace(/ /g, "_");
-                linkName = linkName.replace(/^Gigabyte_(.*)/, (match, group1) => 'Gigabyte_' + group1.toUpperCase()); //Correct Gigabyte case
+		if (name.startsWith("Gigabyte")) {
+			brand = "Gigabyte";
+			linkName = linkName.replace(/ /g, "_");
+			linkName = linkName.replace(/^Gigabyte_(.*)/, (match, group1) => 'Gigabyte_' + group1.toUpperCase()); //Correct Gigabyte case
 
-            } else if (name.startsWith("MSI")) {
-                brand = "MSI";
-                linkName = name.toUpperCase().replace(/ /g, "_"); //Uppercase and replace space before calling shared function
-                const adjectives = ["MAG", "MPG", "PRO"];
-                linkName = extractAndReorderChipset(linkName, brand, adjectives);
+		} else if (name.startsWith("MSI")) {
+			brand = "MSI";
+			linkName = name.toUpperCase().replace(/ /g, "_"); //Uppercase and replace space before calling shared function
+			const adjectives = ["MAG", "MPG", "PRO"];
+			
+			// Special handling for MSI -A Pro boards
+			console.log("APRO?");
+			console.log(linkName);
+			if (linkName.includes("A_PRO")) {
+				linkName = linkName.replace(/_([A-Z0-9-]+)_A_PRO_(.*)/, (match, chipset, rest) => `${brand}_A_PRO_${chipset}_${rest}`);
+			} else {
+				// Regular adjective handling for other MSI boards
+				linkName = extractAndReorderChipset(linkName, brand, adjectives);
+			}
 
-            } else if (name.startsWith("ASUS")) {
-                brand = "ASUS";
-                linkName = name.toUpperCase(); // Capitalize everything
-                linkName = linkName.replace(/ /g, "_");
-                const adjectives = ["ROG_STRIX", "ROG_MAXIMUS", "TUF_GAMING", "PRIME"];
-                linkName = extractAndReorderChipset(linkName, brand, adjectives);
-                linkName = linkName.replace(/^ASUS(.*)/i, (match, group1) => 'Asus' + group1);
+		} else if (name.startsWith("ASUS")) {
+			brand = "ASUS";
+			linkName = name.toUpperCase(); // Capitalize everything
+			linkName = linkName.replace(/ /g, "_");
+			const adjectives = ["ROG_STRIX", "ROG_MAXIMUS", "TUF_GAMING", "PRIME"];
+			linkName = extractAndReorderChipset(linkName, brand, adjectives);
+			linkName = linkName.replace(/^ASUS(.*)/i, (match, group1) => 'Asus' + group1);
 
-            } else {
-                return "Unsupported Brand";
-            }
+		} else {
+			return "Unsupported Brand";
+		}
 
-            for (const socket of sockets) {
-                linkName = linkName.replace(new RegExp(`\\s*${socket}$`), ""); // Remove sockets
-            }
+		for (const socket of sockets) {
+			linkName = linkName.replace(new RegExp(`\\s*${socket}$`), ""); // Remove sockets
+		}
 
-            linkName = linkName.replace(/_+$/, ""); //Remove trailing underscores
+		linkName = linkName.replace(/_+$/, ""); //Remove trailing underscores
 
-            return linkName;
-        }
+		return linkName;
+	}
     </script>
 
 </body>
