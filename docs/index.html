@@ -257,8 +257,6 @@
 			const adjectives = ["MAG", "MPG", "PRO"];
 			
 			// Special handling for MSI -A Pro boards
-			console.log("APRO?");
-			console.log(linkName);
 			if (linkName.includes("A_PRO")) {
 				linkName = linkName.replace(/_([A-Z0-9-]+)_A_PRO_(.*)/, (match, chipset, rest) => `${brand}_A_PRO_${chipset}_${rest}`);
 			} else {
