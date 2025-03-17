@@ -33,258 +33,258 @@
 </head>
 
 <body>
-    <h1>Bundle BIOS Bundler</h1>
+<h1>Bundle BIOS Bundler</h1>
 
-    <p>
-        <b>Manual:</b> You will want a Chromium-based browser to open the following links. (Firefox renders invisible text and allows you to copy it, breaking the detection scheme.)<br><br>
-        For the first text box, you need bundle data. For AMD, visit: <a href="https://www.microcenter.com/site/content/bundle-and-save.aspx" target="_blank">AMD Bundle Page</a>. Intel is not on the roadmap. The current set of bundles have very broken names.<br><br>
-        Once the page is loaded, use Ctrl+A to select all the text on the page, copy it, and paste it into the first text box.<br><br>
-        For the second box, go to this page: <a href="https://www.microcenter.com/search/search_results.aspx?N=4294966996&rpp=96" target="_blank">Motherboard Search Page</a> and do the same (Ctrl+A, copy, paste).
-    </p>
+<p>
+	<b>Manual:</b> You will want a Chromium-based browser to open the following links. (Firefox renders invisible text and allows you to copy it, breaking the detection scheme.)<br><br>
+	For the first text box, you need bundle data. For AMD, visit: <a href="https://www.microcenter.com/site/content/bundle-and-save.aspx" target="_blank">AMD Bundle Page</a>. Intel is not on the roadmap. The current set of bundles have very broken names.<br><br>
+	Once the page is loaded, use Ctrl+A to select all the text on the page, copy it, and paste it into the first text box.<br><br>
+	For the second box, go to this page: <a href="https://www.microcenter.com/search/search_results.aspx?N=4294966996&rpp=96" target="_blank">Motherboard Search Page</a> and do the same (Ctrl+A, copy, paste).
+</p>
 
-    <textarea id="skuList" placeholder="Paste the whole brand bundle page (AMD/Intel) such as to extract SKUs from."></textarea>
-    <textarea id="rawData" placeholder="Paste the contents of the motherboard search.  If you get missing SKUs then you may need to add from page 2."></textarea>
-    <button onclick="extractDataAndProcess()">Extract Data and Generate Links</button>
-    <div id="missingSKUs"></div>
-    <div id="unsupportedBrands" class="warning"></div>
-    <table id="resultsTable">
-        <thead>
-            <tr>
-                <th>SKU</th>
-                <th>Name</th>
-                <th>Link (best guess)</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<textarea id="skuList" placeholder="Paste the whole brand bundle page (AMD/Intel) such as to extract SKUs from."></textarea>
+<textarea id="rawData" placeholder="Paste the contents of the motherboard search.  If you get missing SKUs then you may need to add from page 2."></textarea>
+<button onclick="extractDataAndProcess()">Extract Data and Generate Links</button>
+<div id="missingSKUs"></div>
+<div id="unsupportedBrands" class="warning"></div>
+<table id="resultsTable">
+	<thead>
+		<tr>
+			<th>SKU</th>
+			<th>Name</th>
+			<th>Link (best guess)</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
 
-    <script>
-        const sockets = ["AM5", "LGA1700", "AM4", "LGA 1851", "LGA1851", "LGA_1851", "sTR5"]; // Global array of sockets
-        const brands = ["Gigabyte", "MSI", "ASUS"]; // Global array of brands
+<script>
+	const sockets = ["AM5", "LGA1700", "AM4", "LGA 1851", "LGA1851", "LGA_1851", "sTR5"]; // Global array of sockets
+	const brands = ["Gigabyte", "MSI", "ASUS"]; // Global array of brands
 
-        function getMiddleSKU(data) {
-            const lines = data.split('\n');
-            const results = [];
-            const regex = /\/ (\d+) \$/;
+	function getMiddleSKU(data) {
+		const lines = data.split('\n');
+		const results = [];
+		const regex = /\/ (\d+) \$/;
 
-            for (const line of lines) {
-                const match = line.match(regex);
-                if (match && match[1]) {
-                    results.push(match[1]);
-                }
-            }
-            return results;
-        }
+		for (const line of lines) {
+			const match = line.match(regex);
+			if (match && match[1]) {
+				results.push(match[1]);
+			}
+		}
+		return results;
+	}
 
-        function extractSKUsFromData(data) {
-            const lines = data.split('\n');
-            const results = [];
-            const regex = /SKU:\s*(\d+)/i;
+	function extractSKUsFromData(data) {
+		const lines = data.split('\n');
+		const results = [];
+		const regex = /SKU:\s*(\d+)/i;
 
-            for (const line of lines) {
-                const match = line.match(regex);
-                if (match && match[1]) {
-                    results.push(match[1]);
-                }
-            }
-            return results;
-        }
+		for (const line of lines) {
+			const match = line.match(regex);
+			if (match && match[1]) {
+				results.push(match[1]);
+			}
+		}
+		return results;
+	}
 
-        function extractDataAndProcess() {
-            const extractedData = extractData(); // Get the returned data
-            if (extractedData) {
-                processInput(extractedData); // Pass it to processInput
-            }
-        }
+	function extractDataAndProcess() {
+		const extractedData = extractData(); // Get the returned data
+		if (extractedData) {
+			processInput(extractedData); // Pass it to processInput
+		}
+	}
 
-        function extractData() {
-            const skuListText = document.getElementById('skuList').value;
-            const rawData = document.getElementById('rawData').value;
-            const missingSKUsElement = document.getElementById('missingSKUs');
+	function extractData() {
+		const skuListText = document.getElementById('skuList').value;
+		const rawData = document.getElementById('rawData').value;
+		const missingSKUsElement = document.getElementById('missingSKUs');
 
-            let intendedSKUs = [];
-            const containsLetters = /[a-zA-Z]/.test(skuListText);
-            const isCleanSKUList = !(
-                containsLetters || skuListText.includes('SKU:')
-            ) && skuListText.trim() !== '';
+		let intendedSKUs = [];
+		const containsLetters = /[a-zA-Z]/.test(skuListText);
+		const isCleanSKUList = !(
+			containsLetters || skuListText.includes('SKU:')
+		) && skuListText.trim() !== '';
 
-            let skusToMatch_middleSku = getMiddleSKU(skuListText);
-            let skusToMatch_skuData = extractSKUsFromData(skuListText);
-            let skusToMatch = [...skusToMatch_middleSku, ...skusToMatch_skuData];
-            skusToMatch = [...new Set(skusToMatch)]; // Remove duplicates from extraction
+		let skusToMatch_middleSku = getMiddleSKU(skuListText);
+		let skusToMatch_skuData = extractSKUsFromData(skuListText);
+		let skusToMatch = [...skusToMatch_middleSku, ...skusToMatch_skuData];
+		skusToMatch = [...new Set(skusToMatch)]; // Remove duplicates from extraction
 
-            const lines = rawData.split('\n');
-            const trimmedResults = [];
-            const foundSKUs = new Set();
-            const removeStrings = ['Motherboard', 'EEB', 'eATX', 'microATX', 'ATX', 'Mini-ITX', 'AMD', 'Intel'];
+		const lines = rawData.split('\n');
+		const trimmedResults = [];
+		const foundSKUs = new Set();
+		const removeStrings = ['Motherboard', 'CEB', 'EEB', 'eATX', 'microATX', 'ATX', 'Mini-ITX', 'AMD', 'Intel'];
 
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (line.startsWith('SKU:')) {
-                    let sku = line.split('SKU:')[1].trim();
-                    sku = sku.replace(/\s/g, ''); // Remove all whitespace
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i].trim();
+			if (line.startsWith('SKU:')) {
+				let sku = line.split('SKU:')[1].trim();
+				sku = sku.replace(/\s/g, ''); // Remove all whitespace
 
-                    const skuIsPresent = skusToMatch.includes(sku);
+				const skuIsPresent = skusToMatch.includes(sku);
 
-                    if (skuIsPresent) {
-                        console.log(
-                            ` SKU ${sku} is in skusToMatch (correct list now!)`
-                        );
+				if (skuIsPresent) {
+					console.log(
+						` SKU ${sku} is in skusToMatch (correct list now!)`
+					);
 
-                        // Attempt to get the motherboard name two lines *after* the SKU line
-                        if (lines[i + 2]) {
-                            let fullMotherboardName = lines[i + 2].trim();
-                            let trimmedName = fullMotherboardName;
-                            removeStrings.forEach(str => {
-                                trimmedName = trimmedName.replace(str, '').trim();
-                            });
-                            trimmedName = trimmedName.replace(/\s+/g, ' ');
+					// Attempt to get the motherboard name two lines *after* the SKU line
+					if (lines[i + 2]) {
+						let fullMotherboardName = lines[i + 2].trim();
+						let trimmedName = fullMotherboardName;
+						removeStrings.forEach(str => {
+							trimmedName = trimmedName.replace(str, '').trim();
+						});
+						trimmedName = trimmedName.replace(/\s+/g, ' ');
 
-                            trimmedResults.push(`SKU: ${sku} ${trimmedName}`);
-                            foundSKUs.add(sku);
+						trimmedResults.push(`SKU: ${sku} ${trimmedName}`);
+						foundSKUs.add(sku);
 
-                        } else {
-                            console.warn(
-                                `Could not find motherboard name for SKU: ${sku}. Expected line two lines after "SKU:".`
-                            );
-                            trimmedResults.push(`SKU: ${sku} Unknown Motherboard`); // Add a placeholder
-                        }
-                    } else {
-                        console.log(`SKU ${sku} not found in lists`);
-                    }
-                }
-            }
+					} else {
+						console.warn(
+							`Could not find motherboard name for SKU: ${sku}. Expected line two lines after "SKU:".`
+						);
+						trimmedResults.push(`SKU: ${sku} Unknown Motherboard`); // Add a placeholder
+					}
+				} else {
+					console.log(`SKU ${sku} not found in lists`);
+				}
+			}
+		}
 
-            let missingSKUs = []; // Initialize missingSKUs
-            missingSKUs = skusToMatch.filter(sku => !foundSKUs.has(sku)); // Use skusToMatch for noisy data
+		let missingSKUs = []; // Initialize missingSKUs
+		missingSKUs = skusToMatch.filter(sku => !foundSKUs.has(sku)); // Use skusToMatch for noisy data
 
-            if (missingSKUs.length > 0) {
-                missingSKUsElement.innerHTML =
-                    '<p class="warning">Missing SKUs (from extracted list):</p><pre>' +
-                    missingSKUs.join('\n') +
-                    '</pre>';
-            } else {
-                missingSKUsElement.innerHTML = '<p>All Extracted SKUs found.</p>';
-            }
+		if (missingSKUs.length > 0) {
+			missingSKUsElement.innerHTML =
+				'<p class="warning">Missing SKUs (from extracted list):</p><pre>' +
+				missingSKUs.join('\n') +
+				'</pre>';
+		} else {
+			missingSKUsElement.innerHTML = '<p>All Extracted SKUs found.</p>';
+		}
 
-            // Prepare data for FlashMyBoard Link Generator
-            const flashMyBoardData = trimmedResults.map(item => {
-                const parts = item.split(' ');
-                const sku = parts[1];
-                const name = parts.slice(2).join(' ');
-                return `${sku}\t${name}`; // Format as SKU[tab]Name
-            }).join('\n');
+		// Prepare data for FlashMyBoard Link Generator
+		const flashMyBoardData = trimmedResults.map(item => {
+			const parts = item.split(' ');
+			const sku = parts[1];
+			const name = parts.slice(2).join(' ');
+			return `${sku}\t${name}`; // Format as SKU[tab]Name
+		}).join('\n');
 
-            return flashMyBoardData; // Return the extracted data
-        }
+		return flashMyBoardData; // Return the extracted data
+	}
 
-        function processInput(data) { // Takes data as an argument
-            const lines = data.split('\n');
-            const tableBody = document.getElementById("resultsTable").getElementsByTagName("tbody")[0];
-            tableBody.innerHTML = ""; // Clear existing table rows
-            document.getElementById("unsupportedBrands").innerHTML = ""; // Clear existing unsupported brands
+	function processInput(data) { // Takes data as an argument
+		const lines = data.split('\n');
+		const tableBody = document.getElementById("resultsTable").getElementsByTagName("tbody")[0];
+		tableBody.innerHTML = ""; // Clear existing table rows
+		document.getElementById("unsupportedBrands").innerHTML = ""; // Clear existing unsupported brands
 
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].trim();
+		for (let i = 0; i < lines.length; i++) {
+			let line = lines[i].trim();
 
-                if (line.startsWith("SKU")) continue; // Skip header lines
+			if (line.startsWith("SKU")) continue; // Skip header lines
 
-                const motherboards = line.split('\t');
+			const motherboards = line.split('\t');
 
-                let name = "";
-                let isSupported = false;
+			let name = "";
+			let isSupported = false;
 
-                if (motherboards.length === 2) {
-                    let sku = motherboards[0].trim();
-                    name = motherboards[1].trim();
-                    isSupported = brands.some(brand => name.startsWith(brand)); // Check if name starts with any of the supported brands.
-                    isSupported = isSupported && !name.endsWith("1700"); // Check if name ends in 1700 too many edge cases with DDR4 vs DDR5.
-					isSupported = isSupported && !name.endsWith("sTR5"); // Check if name ends in sTR5, FMB only supports mainstream sockets.
-                    isSupported = isSupported && !name.endsWith("sWRX8"); // Check if name ends in sWRX8, FMB only supports mainstream sockets.
-
-                    if (!isSupported) {
-                        document.getElementById("unsupportedBrands").innerHTML += `<p>${line} - Unsupported Brand or Socket</p>`;
-                        continue; // Skip to the next line
-                    }
-
-                    let link = generateLink(name);
-
-                    const row = tableBody.insertRow();
-                    const skuCell = row.insertCell();
-                    const nameCell = row.insertCell();
-                    const linkCell = row.insertCell();
-
-                    skuCell.textContent = sku;
-                    nameCell.textContent = name;
-                    linkCell.innerHTML = `<a href="https://flashmyboard.com/mb/${link}" target="_blank">https://flashmyboard.com/mb/${link}</a>`;
-                } else {
-                    console.warn("Invalid line format:", line); // Add some logging
-                }
+			if (motherboards.length === 2) {
+				let sku = motherboards[0].trim();
+				name = motherboards[1].trim();
+				isSupported = brands.some(brand => name.startsWith(brand)); // Check if name starts with any of the supported brands.
+				const unsupportedSockets = ["1700", "2066", "4677", "sTR5", "sWRX8"]; // Array of socket suffixes to check (1700 is nightmare due to DDR4 & DDR5 product names, FMB doesn't support HEDT/server sockets.)
+				isSupported = isSupported && !unsupportedSockets.some(socket => name.endsWith(socket));
 
 
-            }
-        }
+				if (!isSupported) {
+					document.getElementById("unsupportedBrands").innerHTML += `<p>${line} - Unsupported Brand or Socket</p>`;
+					continue; // Skip to the next line
+				}
 
-        function extractAndReorderChipset(linkName, brand, adjectives) {
-            let chipsetMatch = linkName.match(new RegExp(`${brand}_([A-Z0-9-]+)_(.*)`)); // Capture the brand, chipset and the rest
-            if (chipsetMatch) {
-                let chipset = chipsetMatch[1];
-                let rest = chipsetMatch[2];
-                let foundAdjective = false;
+				let link = generateLink(name);
 
-                for (const adjective of adjectives) {
-                    if (rest.startsWith(adjective + "_")) {
-                        return `${brand}_${adjective}_${chipset}_${rest.substring(adjective.length + 1)}`;
-                    }
-                }
-                return `${brand}_${chipset}_${rest}`;
-            }
-            return linkName; // Return original if no match
-        }
+				const row = tableBody.insertRow();
+				const skuCell = row.insertCell();
+				const nameCell = row.insertCell();
+				const linkCell = row.insertCell();
 
-        function generateLink(name) {
-		let linkName = name;
-		let brand = ""; // Determine the brand
-
-		if (name.startsWith("Gigabyte")) {
-			brand = "Gigabyte";
-			linkName = linkName.replace(/ /g, "_");
-			linkName = linkName.replace(/^Gigabyte_(.*)/, (match, group1) => 'Gigabyte_' + group1.toUpperCase()); //Correct Gigabyte case
-
-		} else if (name.startsWith("MSI")) {
-			brand = "MSI";
-			linkName = name.toUpperCase().replace(/ /g, "_"); //Uppercase and replace space before calling shared function
-			const adjectives = ["MAG", "MPG", "PRO"];
-			
-			// Special handling for MSI -A Pro boards
-			if (linkName.includes("A_PRO")) {
-				linkName = linkName.replace(/_([A-Z0-9-]+)_A_PRO_(.*)/, (match, chipset, rest) => `${brand}_A_PRO_${chipset}_${rest}`);
+				skuCell.textContent = sku;
+				nameCell.textContent = name;
+				linkCell.innerHTML = `<a href="https://flashmyboard.com/mb/${link}" target="_blank">https://flashmyboard.com/mb/${link}</a>`;
 			} else {
-				// Regular adjective handling for other MSI boards
-				linkName = extractAndReorderChipset(linkName, brand, adjectives);
+				console.warn("Invalid line format:", line); // Add some logging
 			}
 
-		} else if (name.startsWith("ASUS")) {
-			brand = "ASUS";
-			linkName = name.toUpperCase(); // Capitalize everything
-			linkName = linkName.replace(/ /g, "_");
-			const adjectives = ["ROG_STRIX", "ROG_MAXIMUS", "TUF_GAMING", "PRIME"];
-			linkName = extractAndReorderChipset(linkName, brand, adjectives);
-			linkName = linkName.replace(/^ASUS(.*)/i, (match, group1) => 'Asus' + group1);
 
-		} else {
-			return "Unsupported Brand";
 		}
-
-		for (const socket of sockets) {
-			linkName = linkName.replace(new RegExp(`\\s*${socket}$`), ""); // Remove sockets
-		}
-
-		linkName = linkName.replace(/_+$/, ""); //Remove trailing underscores
-
-		return linkName;
 	}
-    </script>
+
+	function extractAndReorderChipset(linkName, brand, adjectives) {
+		let chipsetMatch = linkName.match(new RegExp(`${brand}_([A-Z0-9-]+)_(.*)`)); // Capture the brand, chipset and the rest
+		if (chipsetMatch) {
+			let chipset = chipsetMatch[1];
+			let rest = chipsetMatch[2];
+			let foundAdjective = false;
+
+			for (const adjective of adjectives) {
+				if (rest.startsWith(adjective + "_")) {
+					return `${brand}_${adjective}_${chipset}_${rest.substring(adjective.length + 1)}`;
+				}
+			}
+			return `${brand}_${chipset}_${rest}`;
+		}
+		return linkName; // Return original if no match
+	}
+
+	function generateLink(name) {
+	let linkName = name;
+	let brand = ""; // Determine the brand
+
+	if (name.startsWith("Gigabyte")) {
+		brand = "Gigabyte";
+		linkName = linkName.replace(/ /g, "_");
+		linkName = linkName.replace(/^Gigabyte_(.*)/, (match, group1) => 'Gigabyte_' + group1.toUpperCase()); //Correct Gigabyte case
+
+	} else if (name.startsWith("MSI")) {
+		brand = "MSI";
+		linkName = name.toUpperCase().replace(/ /g, "_"); //Uppercase and replace space before calling shared function
+		const adjectives = ["MAG", "MPG", "PRO"];
+		
+		// Special handling for MSI -A Pro boards
+		if (linkName.includes("A_PRO")) {
+			linkName = linkName.replace(/_([A-Z0-9-]+)_A_PRO_(.*)/, (match, chipset, rest) => `${brand}_A_PRO_${chipset}_${rest}`);
+		} else {
+			// Regular adjective handling for other MSI boards
+			linkName = extractAndReorderChipset(linkName, brand, adjectives);
+		}
+
+	} else if (name.startsWith("ASUS")) {
+		brand = "ASUS";
+		linkName = name.toUpperCase(); // Capitalize everything
+		linkName = linkName.replace(/ /g, "_");
+		const adjectives = ["ROG_STRIX", "ROG_MAXIMUS", "TUF_GAMING", "PRIME"];
+		linkName = extractAndReorderChipset(linkName, brand, adjectives);
+		linkName = linkName.replace(/^ASUS(.*)/i, (match, group1) => 'Asus' + group1);
+
+	} else {
+		return "Unsupported Brand";
+	}
+
+	for (const socket of sockets) {
+		linkName = linkName.replace(new RegExp(`\\s*${socket}$`), ""); // Remove sockets
+	}
+
+	linkName = linkName.replace(/_+$/, ""); //Remove trailing underscores
+
+	return linkName;
+}
+</script>
 
 </body>
 
