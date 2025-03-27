@@ -1,0 +1,17 @@
+  SKU      Name                                         Chipset   Date         Ver    Notes                        FMB Link                                                        
+  574863   MSI X670E MAG Tomahawk WiFi AM5              X670E     2025-03-26   1H     R9x3D in stable              https://flashmyboard.com/mb/MSI_MAG_X670E_TOMAHAWK_WIFI         
+  829457   ASUS Z890 AYW GAMING WIFI W LGA 1851         Z890      2025-03-25   1805   microcode 0x117 in release   https://flashmyboard.com/mb/Asus_Z890_AYW_GAMING_WIFI_W         
+  755892   MSI X870E MPG CARBON WIFI AM5                X870E     2025-03-20   1A3                                 https://flashmyboard.com/mb/MSI_MPG_X870E_CARBON_WIFI           
+  802967   MSI X870E MAG TOMAHAWK WIFI AM5              X870E     2025-03-18   2A4                                 https://flashmyboard.com/mb/MSI_MAG_X870E_TOMAHAWK_WIFI         
+  742627   ASUS X870E-E ROG Strix Gaming WiFi AM5       X870E     2025-03-07   1203                                https://flashmyboard.com/mb/Asus_ROG_STRIX_X870E-E_GAMING_WIFI  
+  513747   ASUS B650-A ROG Strix Gaming WiFi AM5        B650      2025-03-07   3222                                https://flashmyboard.com/mb/Asus_ROG_STRIX_B650-A_GAMING_WIFI   
+  693788   ASUS B650-E TUF Gaming WiFi AM5              B650      2025-03-07   3222                                https://flashmyboard.com/mb/Asus_TUF_GAMING_B650-E_WIFI         
+  663286   ASUS B650M-A Prime AX II AM5                 B650      2025-03-07   3222                                https://flashmyboard.com/mb/Asus_PRIME_B650M-A_AX_II            
+  440198   ASUS B650M-PLUS TUF Gaming WiFi AM5          B650      2025-03-07   3222                                https://flashmyboard.com/mb/Asus_TUF_GAMING_B650M-PLUS_WIFI     
+  650184   Gigabyte B650 AORUS ELITE AX ICE AM5         B650      2025-02-21   F33b                                https://flashmyboard.com/mb/Gigabyte_B650_AORUS_ELITE_AX_ICE    
+  660753   Gigabyte B650 Gaming X AX V2 AM5             B650      2025-02-21   F33b                                https://flashmyboard.com/mb/Gigabyte_B650_GAMING_X_AX_V2        
+  755603   Gigabyte X870E AORUS Master AM5              X870E     2025-02-21   F5b                                 https://flashmyboard.com/mb/Gigabyte_X870E_AORUS_MASTER         
+  720136   ASUS Z790 Prime Gaming WIFI7 LGA 1700        Z790      2025-02-11   1812                                https://flashmyboard.com/mb/Asus_Z790_GAMING_WIFI7              
+  689570   ASUS Z790-V Prime AX LGA 1700                Z790      2025-02-11   1813                                https://flashmyboard.com/mb/Asus_PRIME_Z790-V_AX                
+  536334   ASUS Z790-Plus TUF Gaming WiFi D5 LGA 1700   Z790      2024-11-04   1805                                https://flashmyboard.com/mb/Asus_TUF_GAMING_Z790-PLUS_WIFI      
+  514406   MSI Z790-P Pro WiFi D4 LGA 1700              Z790      2024-10-29   1E                                  https://flashmyboard.com/mb/MSI_PRO_Z790-P_WIFI_DDR4            
